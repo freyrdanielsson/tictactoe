@@ -15,3 +15,7 @@ Here the program also learns by competing with itself but one of the players use
 This reffers to the [tictac_vsPlayer.py](tictac_vsPlayer.py) python script.
 Here the agent learns by itself and after doing so it is put to the test against a human.
 
+
+### The test.py
+[test.py](test.py) is my first python program. Please do not judge me 🎅🏽.
+
