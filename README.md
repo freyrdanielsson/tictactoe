@@ -19,3 +19,4 @@ Here the agent learns by itself and after doing so it is put to the test against
 ### The test.py
 [test.py](test.py) is my first python program. Please do not judge me 🎅🏽.
 
+with courtesy to [Reinforcement Learning: An Introduction eftir Richard S. Sutton og Andrew G. Barto](http://incompleteideas.net/book/the-book-2nd.html)
