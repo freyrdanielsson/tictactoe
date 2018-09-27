@@ -99,8 +99,13 @@ print("Here are the rules while you wait")
 print("This is what the board looks like in terms of moves you can make")
 print(np.array(range(0,9)).reshape(3,3))
 print("simply select the number on the board where you want to make your move")
+
 # train the value function using 10000 games
 learnit(20000, epsilon, alpha)
+
+# compete with self
+learnit(20000, 0, 0)
+
 print("We have now mastered tic tac toe, play us " + u'🐍')
 # play a game agains a human
 learnit(1, 0, 0, 1, True, True)
@@ -113,5 +118,6 @@ while True:
 	else:
 			print('see you later aligator')
 			break
-# play one game with explorative moves using the value function
-#learnit(1, 0.1, 0, True)
+
+
+# Todo: make agent better when he doesn't have the first move
