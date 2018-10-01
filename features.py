@@ -113,8 +113,7 @@ ftrans = np.transpose(features) # f.T
 fmul = np.matmul(ftrans, features) # f.T * f
 finv = np.linalg.inv(fmul) # (f.T * f)^-1
 finv_mul = np.matmul(finv, ftrans) # (f.T * f)^-1 * f.T
-weigts = np.matmul(np.around(finv_mul, decimals=2), true_values) # (f.T * f)^-1 * f.T * v
-
+weigts = np.matmul(finv_mul, true_values) # (f.T * f)^-1 * f.T * v
 
 print(weigts)
 
