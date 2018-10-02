@@ -46,6 +46,7 @@ def learnit(numgames, epsilon, alpha, debug = False):
         player = 1
         # start turn playing game, maximum 9 moves
         for move in range(0, 9):
+            print(1,sold, move, player)
             # use a policy to find action
             action = epsilongreedy(np.copy(board), player, epsilon, debug)
             # perform move and update board (for other player)
@@ -63,6 +64,7 @@ def learnit(numgames, epsilon, alpha, debug = False):
             # do a temporal difference update, once both players have made at least one move
             if (1 < move):
                 value[sold[player]] = value[sold[player]] + alpha * (value[hashit(board)] - value[sold[player]])
+                print(2,sold, move, player)
             sold[player] = hashit(board) # store this new state for player
             # check if we have a draw, then set the final states for both players to 0.5
             if (8 == move):
@@ -75,8 +77,8 @@ value = np.ones(hashit(2 * np.ones(9))) / 1.0
 alpha = 0.1 # step size
 epsilon = 0.1 # exploration parameter
 # train the value function using 10000 games
-learnit(10000, epsilon, alpha)
+learnit(1, epsilon, alpha)
 # play one game deterministically using the value function
-learnit(1, 0, 0, True)
+#learnit(1, 0, 0, True)
 # play one game with explorative moves using the value function
-learnit(1, 0.1, 0, True)
+#learnit(1, 0.1, 0, True)

@@ -27,8 +27,9 @@ def features(board):
 	return [singlets, doublets] + [int(i) for i in board]
 
 board = np.zeros(9)
+print(board[10000])
 
-board[2] = 1
+''' board[2] = 1
 board[1] = 2
 board[0] = 1
 
@@ -60,7 +61,7 @@ test2 = np.matmul(test1, f) #f.T * f
 test3 = np.linalg.inv(test2) # (f.T * f)^-1
 #print(test3)
 
-test4 = np.matmul(test3, test1) #(f.T * f)^-1 * f.T
+test4 = np.matmul(test3, test1) # (f.T * f)^-1 * f.T
 #print(test4)
 
 sol2 = np.matmul(np.around(test4, decimals=1), np.transpose(v))
@@ -68,4 +69,4 @@ sol2 = np.matmul(np.around(test4, decimals=1), np.transpose(v))
 print(sol2) # fæ [0, 50]
 
 
-#print(sol2) # fæ [-200, 150]
+#print(sol2) # fæ [-200, 150] '''
