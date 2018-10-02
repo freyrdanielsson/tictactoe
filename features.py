@@ -101,10 +101,13 @@ def learnit(numgames, epsilon, alpha, debug = False):
 		for move in range(0, 9):
 			# store the features and value for this state for player 1
 			if (player == 1):
-				updateFeatureValue(np.copy(board), sold) # update features for the board before taking action
-				old_board_view_p1 = np.copy(board) # keeping a view of the board before an action was made
+				updateFeatureValue(np.copy(board)) # update features for the board before taking action
+			
 			# use a policy to find action
 			action = epsilongreedy(np.copy(board), player, epsilon, debug)
+
+			if (player == 1):
+				updateFeatureValue(np.copy(board)) # update features for the board after taking action
 			# perform move and update board (for other player)
 			board[action] = player
 			if debug: # print the board, when in debug mode
@@ -113,21 +116,17 @@ def learnit(numgames, epsilon, alpha, debug = False):
 				print(symbols[board.astype(int)].reshape(3,3))
 			if (1 == iswin(board, player)): # has this player won?
 				value[sold[player]] = value[sold[player]] + alpha * (1.0 - value[sold[player]]) 
-				updateFeatureValue(np.copy(old_board_view_p1), sold) # update value linked with features and state of OLD board!
 				sold[player] = hashit(board) # index to winning state
 				value[sold[player]] = 1.0 # winner (reward one)								
 				value[sold[getotherplayer(player)]] = 0.0 # looser (reward zero)
-				updateFeatureValue(np.copy(board), sold) # update value linked with features and state of NEW board!
 				break
 			# do a temporal difference update, once both players have made at least one move
 			if (1 < move):
 				value[sold[player]] = value[sold[player]] + alpha * (value[hashit(board)] - value[sold[player]])
-				updateFeatureValue(old_board_view_p1, sold) # update value linked with features and state of OLD board!
 			sold[player] = hashit(board) # store this new state for player
 			# check if we have a draw, then set the final states for both players to 0.5
 			if (8 == move):
 				value[sold] = 0.5 # draw (equal reward for both)
-				updateFeatureValue(np.copy(board), sold) # update value link with features and state of NEW board!
 			player = getotherplayer(player) # swap players
 			
 
@@ -171,11 +170,11 @@ def compete(numgames, debug = False, featuresOn = False):
 # inserts a key-value object into p1_features if key does not exist, otherwise updates the value for given key
 # how the object will look
 # {123: {feature: [array], value: float}, ...} = {key: {value}, ...} = {state: {feature and true value for that state}, ...}
-def updateFeatureValue(board, sold, player=1):
+def updateFeatureValue(board):
 	feature_board = board
 	feature_board[board == 2] = -1
 	# for state s = hashit(board), store features and true value
-	p1_features[hashit(board)] = {'feature': features(feature_board), 'value': value[sold[player]]}
+	p1_features[hashit(board)] = features(feature_board)
 
 # global after-state value function, note this table is too big and contrains states that
 # will never be used, also each state is unique to the player (no one after-state seen by both players) 
@@ -186,8 +185,10 @@ epsilon = 0.1 # exploration parameter
 # train the value function using 10000 games
 learnit(10000, epsilon, alpha)
 
-features = [p1_features[x]['feature'] for x in p1_features]
-true_values = [p1_features[x]['value'] for x in p1_features]
+features = [p1_features[x] for x in p1_features]
+
+# get values for all states that have features
+true_values = [value[x] for x in p1_features]
 
 ftrans = np.transpose(features) # f.T
 fmul = np.matmul(ftrans, features) # f.T * f
@@ -202,7 +203,7 @@ count = 0
 for i in p1_features:
 	# this gives a value function of
 	# v_e = x1w1 + x2w2 + ... +x12w12
-	x = np.matmul(p1_features[i]['feature'], weigts)
+	x = np.matmul(p1_features[i], weigts)
 	lo, hi = min(x, lo), max(x, hi) # just checking if there is anything interesting with max, min in v_approx
 	v_approx[i] = x
 
@@ -245,4 +246,6 @@ print('features game example')
 compete(1, True, True)
 
 # Results: I need to figure out where to place the updateFeatures function in the learnit
-# player 1 allways ends up doing the same moves... his first move is always the same as well
+# player 1 allways ends up doing the same moves... his first move is always the same as well, maybe the features are bad
+# because they don't have any information on how player 2 is doing (in terms of singlets, doublets)
+# or maybe i'm not using the features for the board smart enough...
