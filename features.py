@@ -106,9 +106,10 @@ def learnit(numgames, epsilon, alpha, debug = False):
 			# use a policy to find action
 			action = epsilongreedy(np.copy(board), player, epsilon, debug)
 
+			# perform move and update board (for other player)
+
 			if (player == 1):
 				updateFeatureValue(np.copy(board)) # update features for the board after taking action
-			# perform move and update board (for other player)
 			board[action] = player
 			if debug: # print the board, when in debug mode
 				symbols = np.array([" ", "X", "O"])
