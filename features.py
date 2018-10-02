@@ -238,12 +238,7 @@ print("Player 1 - wins: ", featurGames.get('p1'))
 print("Player 2 - wins: ", featurGames.get('p2'))
 print("Ties: ", featurGames.get('tie'))
 
-# game examples
-print('')
-print('TD(0) game example')
-compete(1, True, False)
-print('features game example')
-compete(1, True, True)
+print('Weights used to evaluate the value function approximation: ', weigts)
 
 # Results: I need to figure out where to place the updateFeatures function in the learnit
 # player 1 allways ends up doing the same moves... his first move is always the same as well, maybe the features are bad
