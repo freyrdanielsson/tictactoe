@@ -85,15 +85,12 @@ def features(board):
 	# i got some estimate values greater then 1.0 which did not make sense so I put it there again
 	actual_board = board
 	actual_board[board == -1] = 2
-	return [singletsX, doubletsX] + [int(i) for i in actual_board]
+	return [1, singletsX, doubletsX] + [int(i) for i in actual_board]
 
 def learnit(numgames, epsilon, alpha, debug = False):
 	# play games for training
 	for games in range(0, numgames):
 		board = np.zeros(9)          # initialize the board
-		# This will be the board player one sees before making an action, have to store it to be able to
-		# keep the p1_features object clean and only containing features and values for player 1
-		old_board_view_p1 = []
 		sold = [0, hashit(board), 0] # first element not used
 		# player to start is "1" the other player is "2"
 		player = 1
@@ -106,11 +103,13 @@ def learnit(numgames, epsilon, alpha, debug = False):
 			# use a policy to find action
 			action = epsilongreedy(np.copy(board), player, epsilon, debug)
 
-			# perform move and update board (for other player)
 
 			if (player == 1):
 				updateFeatureValue(np.copy(board)) # update features for the board after taking action
+				
+			# perform move and update board (for other player)
 			board[action] = player
+
 			if debug: # print the board, when in debug mode
 				symbols = np.array([" ", "X", "O"])
 				print("player ", symbols[player], ", move number ", move+1, ":")
@@ -163,11 +162,6 @@ def compete(numgames, debug = False, featuresOn = False):
 
 	return wins
 
-# parameters:
-# board: board for which features will be calulated
-# sold: list containing pointers to old states of the board
-# player=1: the player we would like to update for
-
 # inserts a key-value object into p1_features if key does not exist, otherwise updates the value for given key
 # how the object will look
 # {123: {feature: [array], value: float}, ...} = {key: {value}, ...} = {state: {feature and true value for that state}, ...}
@@ -184,7 +178,7 @@ p1_features = {}
 alpha = 0.1 # step size
 epsilon = 0.1 # exploration parameter
 # train the value function using 10000 games
-learnit(10000, epsilon, alpha)
+learnit(50000, epsilon, alpha)
 
 features = [p1_features[x] for x in p1_features]
 
